@@ -11,3 +11,5 @@ npm-debug.log
 dist
 .idea
 test
+build
+package-lock.json
