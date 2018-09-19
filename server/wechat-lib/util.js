@@ -42,6 +42,7 @@ export function formatMessage(result) {
 }
 
 export function tpl(content, message) {
+  console.log(content);
   let type = 'text';
   if (Array.isArray(content)) {
     type = 'news';
@@ -51,8 +52,9 @@ export function tpl(content, message) {
 
   }
   if (content && content.type) {
-    type = 'text';
+    type = content.type;
   }
+
   let info = Object.assign({}, {
     content,
     createTime  : new Date().getTime(),

@@ -30,9 +30,7 @@ export default function(opts, reply) {
         limit   : '1mb',
         encoding: ctx.charset
       });
-
       const content = await util.parseXML(data);
-      // console.log(content);
       const message = util.formatMessage(content.xml);
       ctx.weixin    = message;
 
@@ -41,23 +39,13 @@ export default function(opts, reply) {
       const replyBody = ctx.body;
       const msg       = ctx.weixin;
 
-      // const xml  = util.tpl(replyBody, msg);
-      console.log(replyBody);
-      console.log(content.xml);
-      console.log(content.xml.FromUserName[0]);
-      console.log(content.xml.ToUserName[0]);
-      const xml = `<xml>
-                      <ToUserName>< ![CDATA[${content.xml.FromUserName[0]}] ]></ToUserName>
-                      <FromUserName>< ![CDATA[${content.xml.ToUserName[0]}] ]></FromUserName>
-                      <CreateTime>12345678</CreateTime> 
-                      <MsgType>< ![CDATA[text] ]></MsgType> 
-                      <Content>< ![CDATA[${replyBody}] ]></Content> 
-                    </xml>`;
+      const xml = util.tpl(replyBody, msg);
       console.log(xml);
 
       ctx.status = 200;
       ctx.type   = 'application/xml';
       ctx.body   = xml;
+
     }
 
   };
