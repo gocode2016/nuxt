@@ -93,9 +93,9 @@ export default class Wechat {
     // console.log(operation === 'uploadMaterial');
     const tokenData = await this.fetchAccessToken();
     // console.log(tokenData, 'tokenData');
-    const options = await this[operation](tokenData.token, ...args);
+    const options   = await this[operation](tokenData.token, ...args);
     // console.log(options, 'optons');
-    const data = await this.request(options);
+    const data      = await this.request(options);
     // console.log(data);
     return data;
   }
@@ -129,7 +129,9 @@ export default class Wechat {
       uploadUrl += '&type=' + type;
     }
     else {
-      form.access_token = token;
+      if (type !== 'news') {
+        form.access_token = token;
+      }
       // form.field('access_token', token);
     }
 

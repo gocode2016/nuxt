@@ -10,10 +10,7 @@ export const router = app => {
   router.get('/upload', async (ctx, next) => {
     let mp     = require('../wechat');
     let client = mp.getWechat();
-    // console.log(1111111111111111);
-    const data =await  client.handle('uploadMaterial', 'video', resolve(__dirname, '../../ice.mp4'), {
-      type: 'video', description: '{"title": "haha", "instroduction": "heihei"}'
-    });
+    const data = await  client.handle('uploadMaterial', 'video', resolve(__dirname, '../../ice.mp4'));
     console.log(data);
   });
   app

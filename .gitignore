@@ -13,3 +13,5 @@ dist
 test
 build
 package-lock.json
+
+*ignore*.md
