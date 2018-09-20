@@ -20,6 +20,33 @@ const api  = {
     update       : base + 'material/update_material?',
     count        : base + 'material/get_meterialcount?',
     batch        : base + 'material/batchget_material?'
+  },
+  tag        : {
+    create    : base + 'tags/create?',
+    fetch     : base + 'tags/get?',
+    update    : base + 'tags/update?',
+    del       : base + 'tags/delete?',
+    fetchUsers: base + 'user/tag/get?',
+    batchTag  : base + 'tags/members/batchtagging?',
+    batchUnTag: base + 'tags/members/batchuntagging?',
+    getTagList: base + 'tags/getidlist?'
+  },
+  user       : {
+    remark           : base + 'user/info/updateremark?',
+    info             : base + 'user/info?',
+    batchInfo        : base + 'user/info/batchget?',
+    fetchUserList    : base + 'user/get?',
+    getBlackList     : base + 'tags/members/getblacklist?',
+    batchBlackUsers  : base + 'tags/members/batchblacklist?',
+    batchUnblackUsers: base + 'tags/members/batchunblacklis?'
+  },
+  menu       : {
+    create      : base + 'menu/create?',
+    get         : base + 'menu/get?',
+    del         : base + 'menu/delete?',
+    addCondition: base + 'menu/addconditional?',
+    delCondition: base + 'menu/delconditional?',
+    getInfo     : base + 'get_current_selfmenu_info?'
   }
 };
 
@@ -164,7 +191,7 @@ export default class Wechat {
     if (permanent) {
       fetchUrl = api.permanent.fetch;
     }
-    let url     = fetchUrl + 'access_token' + token;
+    let url     = fetchUrl + 'access_token=' + token;
     let options = {method: 'POST', url};
 
     if (permanent) {
@@ -194,7 +221,7 @@ export default class Wechat {
       media_id: mediaId
     };
     _.extend(form, news);
-    const url = api.permanent.update + 'access_token' + token + '&media_id=' + mediaId;
+    const url = api.permanent.update + 'access_token=' + token + '&media_id=' + mediaId;
     return {method: 'POST', url, body: form};
   }
 
@@ -204,7 +231,7 @@ export default class Wechat {
    * @returns {{method: string, url: string}}
    */
   countMaterial(token) {
-    const url = api.permanent.count + 'access_token' + token;
+    const url = api.permanent.count + 'access_token=' + token;
     return {method: 'GET', url};
   }
 
@@ -218,7 +245,142 @@ export default class Wechat {
     options.type   = options.type || 'image';
     options.offset = options.offset || 0;
     options.count  = options.count || 10;
-    const url      = api.permanent.batch + 'access_token' + token;
+    const url      = api.permanent.batch + 'access_token=' + token;
     return {method: 'POST', url, body: options};
+  }
+
+  /** tag **/
+  createTag(token, name) {
+    const form = {
+      tag: {
+        name
+      }
+    };
+    const url  = api.tag.create + 'access_token=' + token;
+    return {method: 'POST', url, body: form};
+  }
+
+  fetchTags(token) {
+    const url = api.tag.fetch + 'access_token=' + token;
+    return {url};
+  }
+
+  updateTag(token, tagId, name) {
+    const form = {
+      tag: {
+        id: tagId,
+        name
+      }
+    };
+    const url  = api.tag.update + 'access_token=' + token;
+    return {method: 'POST', url, body: form};
+  }
+
+  delTag(token, tagId) {
+    const form = {
+      tag: {
+        id: tagId
+      }
+    };
+    const url  = api.tag.del + 'access_token=' + token;
+    return {method: 'POST', url, body: form};
+  }
+
+  fetchTagUsers(token, tagId, openId) {
+    const form = {
+      tagid      : tagId,
+      next_openid: openId || ''
+    };
+    const url  = api.tag.fetchUsers + 'access_token=' + token;
+    return {method: 'POST', url, body: form};
+
+  }
+
+  // unTag true|false
+  batchTag(token, openIdList, tagId, unTag) {
+    const form = {
+      openid_list: openIdList,
+      tagid      : tagId
+    };
+
+    let url = api.tag.batchTag;
+    if (unTag) {
+      url = api.tag.batchTag;
+    }
+    url += 'access_token=' + token;
+    return {method: 'POST', url, body: form};
+  }
+
+  getTagList(token, openId) {
+    const form = {
+      openid: openId
+    };
+    const url  = api.tag.getTagList + 'access_token=' + token;
+    return {method: 'POST', url, body: form};
+  }
+
+  remarkUser(token, openId, remark) {
+    const form = {
+      openid: openId,
+      remark
+    };
+    const url  = api.user.remark + 'access_token=' + token;
+    return {method: 'POST', url, body: form};
+
+  }
+
+  getUserInfo(token, openId, lang) {
+    const url = `${api.user.info}access_token=${token}&openid=${openId}&lang=${lang || 'zh_CN'}`;
+    return {url};
+  }
+
+  batchUserInfo(token, userList) {
+    const url  = `${api.user.batchInfo}access_token=${token}`;
+    const form = {
+      user_list: userList
+    };
+    return {method: 'POST', url, body: form};
+
+  }
+
+  fetchUserList(token, openId) {
+    const url = `${api.user.fetchUserList}access_token=${token}` + (openId
+      ? `&next_openid=${openId}`
+      : '');
+    return {url};
+
+  }
+
+  /** menu **/
+  createMenu(token, menu) {
+    const url = `${api.menu.create}access_token=${token}`;
+    return {method: 'POST', url, body: menu};
+  }
+
+  getMenu(token) {
+    const url = `${api.menu.get}access_token=${token}`;
+    return {url};
+  }
+
+  delMenu(token) {
+    const url = `${api.menu.del}access_token=${token}`;
+    return {url};
+  }
+
+  addConditionMenu(token, menu, rule) {
+    const url  = `${api.menu.addCondition}access_token=${token}`;
+    const form = {
+      button   : menu,
+      matchrule: rule
+    };
+    return {method: 'POST', url, body: form};
+  }
+
+  delConditionMenu(token, menuId) {
+    const url = `${api.menu.delCondition}access_token=${token}`;
+    let form  = {
+      menuid: menuId
+    };
+    return {method: 'POST', url, body: form};
   }
 }

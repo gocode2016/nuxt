@@ -1,7 +1,10 @@
 const tip = '欢迎来到这里\n' + '点击 <a href="http://coding.imooc.com">一起搞事情</a>';
 export default async (ctx, next) => {
   const message = ctx.weixin;
-  console.log(message);
+
+  let mp     = require('../wechat');
+  let client = mp.getWechat();
+
   if (message.MsgType === 'event') {
     if (message.Event === 'subscribe') { // 关注
       ctx.body = tip;
@@ -14,6 +17,11 @@ export default async (ctx, next) => {
     }
   }
   else if (message.MsgType === 'text') {
+    if (message.Content === '1') {
+      let userList = [{openid: 'ofrda1BhAJcspF3v3FNNd1IsK-34', lang: 'zh_CN'}];
+      const data = await client.handle('getTagList', userList[0].openid);
+      console.log(data);
+    }
     ctx.body = message.Content;
   }
 
