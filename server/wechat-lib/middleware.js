@@ -12,7 +12,6 @@ export default function(opts, reply) {
     const sha                                    = sha1(str);
 
     if (ctx.method === 'GET') {
-
       if (sha === signature) {
         ctx.body = echostr;
       }
@@ -25,7 +24,7 @@ export default function(opts, reply) {
         ctx.body = 'Failed';
         return false;
       }
-      const data = await getRawBody(ctx.req, {
+      const data    = await getRawBody(ctx.req, {
         length  : ctx.length,
         limit   : '1mb',
         encoding: ctx.charset
@@ -45,6 +44,8 @@ export default function(opts, reply) {
       ctx.status = 200;
       ctx.type   = 'application/xml';
       ctx.body   = xml;
+
+      //
 
     }
 
