@@ -383,4 +383,9 @@ export default class Wechat {
     };
     return {method: 'POST', url, body: form};
   }
+
+  getCurrentMenuInfo(token) {
+    const url = `${api.menu.getInfo}access_token=${token}`;
+    return {url};
+  }
 }

@@ -15,12 +15,24 @@ export default async (ctx, next) => {
     else if (message.Event === 'LOCATION') {
       ctx.body = message.Latitude + ' : ' + message.longitude;
     }
+    else if (message.Event === 'view') {
+      ctx.body = message.EventKey + message.MenuId;
+    }
+    else if (message.Event === 'pic_sysphoto') {
+      ctx.body = message.Count + ' photos sent';
+    }
   }
   else if (message.MsgType === 'text') {
     if (message.Content === '1') {
       let userList = [{openid: 'ofrda1BhAJcspF3v3FNNd1IsK-34', lang: 'zh_CN'}];
-      const data = await client.handle('getTagList', userList[0].openid);
+      const data   = await client.handle('getTagList', userList[0].openid);
       console.log(data);
+    }
+    else if (message.Content === '2') {
+      const menu = require('./menu').default;
+      await client.handle('delMenu');
+      const menuData = await client.handle('createMenu', menu);
+      console.log(JSON.stringify(menuData));
     }
     ctx.body = message.Content;
   }
